@@ -1,0 +1,9 @@
+# 03/17/2025
+Build out the following capabilities:
+- add cells to a notebook object from a configuration object (cell type, cell source, cell tags), and execute
+- perform the above, and validate outputs
+	- does this make sense to do outside of the code? Or should code check cells be added to the notebook?
+- perform the above, and determine namespace changes (what new variables are defined?)
+- determine variable dependencies for a code block
+- trim code check cells and namespace determination cells
+	- likely this will be done with cell tags, but is there an easier way?
