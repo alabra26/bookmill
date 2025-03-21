@@ -10,3 +10,10 @@ Build out the following capabilities:
 
 # 03/18/2025
 :check: Revert commits to main and push all commits to a feature branch child of dev
+
+# 03/20/2025
+- pytest almost working, but requires bookmill.src.utils import path in tests,
+  while in production we require src.utils import path
+- find a better solution to the tmp save path for pm.execute_notebook
+- remove all notebook modification side-effects (should not add cells inplace
+  or add cell outputs after execution inplace)
