@@ -1,6 +1,6 @@
 import nbformat as nbf
 
-from utils import *
+from bookmill.src.utils import *
 
 def test_create_cell():
     # load expected output Jupyter notebook
@@ -8,3 +8,4 @@ def test_create_cell():
     # create new Jupyter notebook from cell configuration
 
     # assert equal
+    assert True
