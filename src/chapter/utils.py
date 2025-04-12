@@ -94,11 +94,20 @@ class NotebookGenerator():
         # define variable scope cell
         # TODO : move this to a config file
         # TODO : make this a Cell object
-        scope_cell = {
-            'cell_type': 'code',
-            'source': 'locals()',
-            'tags': ['scope', 'trim']
-        }
+        if self.kernel == "python":
+            scope_cell = {
+                'cell_type': 'code',
+                'source': 'locals()',
+                'tags': ['scope', 'trim']
+            }
+        elif self.kernel == "R":
+            scope_cell = {
+                'cell_type': 'code',
+                'source': 'ls()',
+                'tags': ['scope', 'trim']
+            }
+        else:
+            raise NotImplementedError(f"Scope checking not compatible with specified kernel: {self.kernel}")
         tmp_pth = 'tmp.ipynb'
         # TODO : add execution parameters here if they exist
         nb2 = pm.execute_notebook(add_cell_to_notebook(self.nb, scope_cell), tmp_pth)
