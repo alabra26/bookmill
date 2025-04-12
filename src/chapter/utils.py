@@ -62,18 +62,18 @@ class NotebookGenerator():
                 print(f"Could not add chapter, missing requirement: {var}")
                 return
         # get scope additions
-        self._get_scope_additions(chapter['cells'])
+        self._get_scope_additions(chapter['New Cells'])
         # check variables added to scope
         success = True
         for var in chapter['Defines']:
             if not var in self.current_scope:
                 # if not all variables defined successfully, add failure condition cells
                 success = False
-                self.nb = add_cells_to_notebook(nb, chapter['Failure Cells'])
+                self.nb = add_cells_to_notebook(self.nb, chapter['Failure Cells'])
                 break
         # if all variables are present, add success condition cells
         if success:
-            self._add_cells_to_notebook(chapter['Success Cells'])
+            self.nb = add_cells_to_notebook(self.nb, chapter['Success Cells'])
         # extract any defined outputs ("Computes" values)
         self.rpl_vals.update(self._extract_computed_values(chapter))
         # try replacing any Replaces values
@@ -146,9 +146,9 @@ class NotebookGenerator():
         
 
 def create_cell_from_dict(celldata: dict) -> nbf.NotebookNode:
-    if celldata['cell_type'] == 'code':
+    if celldata['cell type'] == 'code':
         newcell = nbf.v4.new_code_cell(source = celldata['source'])
-    elif celldata['cell_type'] == 'markdown':
+    elif celldata['cell type'] == 'markdown':
         newcell = nbf.v4.new_markdown_cell(source = celldata['source'])
     newcell['metadata']['tags'] = celldata['tags']
 
