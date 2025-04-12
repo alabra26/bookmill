@@ -62,14 +62,14 @@ class NotebookGenerator():
                 print(f"Could not add chapter, missing requirement: {var}")
                 return
         # get scope additions
-        self._get_scope_additions(chapter)
+        self._get_scope_additions(chapter['cells'])
         # check variables added to scope
         success = True
         for var in chapter['Defines']:
             if not var in self.current_scope:
                 # if not all variables defined successfully, add failure condition cells
                 success = False
-                self._add_cells_to_notebook(chapter['Failure Cells'])
+                self.nb = add_cells_to_notebook(nb, chapter['Failure Cells'])
                 break
         # if all variables are present, add success condition cells
         if success:
