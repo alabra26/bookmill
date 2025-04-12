@@ -1,7 +1,7 @@
 import nbformat as nbf
 import papermill as pm
 import yaml
-from Typing import Dict, List
+from typing import Dict, List
 #from bookmill.src.Chapter import Chapter
 
 # TODO : figure out how we will run papermill with parameter injection, as this is needed (even for scope checking)
