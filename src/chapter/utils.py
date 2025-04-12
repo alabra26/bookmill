@@ -58,7 +58,37 @@ class NotebookGenerator():
         self._replace_strings()
         # check for more Replace values, and tag markdown cells with "rpl" if they exist
         self._tag_replace_strings()
-    
+
+    def _get_scope_additions(self, chaptercells: List[dict]) -> List[str]:
+        initial_scope = self._get_nb_scope()
+        self.nb = add_cells_to_notebook(self.nb, chaptercells)
+        final_scope = self._get_nb_scope()
+        # remove jupyter internals
+        scopediff = set([v for v in list(set(final_scope) - set(initial_scope)) if not v.startswith('_')])
+
+        return scopediff
+
+    def _get_nb_scope():
+        # define variable scope cell
+        # TODO : move this to a config file
+        # TODO : make this a Cell object
+        scope_cell = {
+            'cell_type': 'code',
+            'source': 'locals()',
+            'tags': ['scope', 'trim']
+        }
+        tmp_pth = 'tmp.ipynb'
+        # TODO : add execution parameters here if they exist
+        nb2 = pm.execute_notebook(self._add_cell_to_notebook(self.nb, scope_cell), tmp_pth)
+        # Ignore any variables that are assigned as None
+        scope_dict = {s.split(': ')[0].replace("'",""): s.split(': ')[1] 
+            for s in nb2['cells'][-1]['outputs'][0]['data']['text/plain'][1:-1].split(",\n ")
+            if not s.split(': ')[1] == "None"
+        }
+        # Remove scope_cell from notebook
+        self.nb['cells'].pop(-1)
+        return list(scope_dict.keys())
+        
     
     
         
@@ -133,32 +163,7 @@ def load_chapters(chapter_yaml_path: str) -> dict:
             raise
     return chapters
     
-def get_nb_scope(nb: nbf.NotebookNode):
-    # define variable scope cell
-    # TODO : move this to a config file
-    # TODO : make this a Cell object
-    scope_cell = {
-        'cell_type': 'code',
-        'source': 'locals()',
-        'tags': ['scope', 'trim']
-    }
-    tmp_pth = 'tmp.ipynb'
-    nb2 = pm.execute_notebook(add_cell_to_notebook(nb, scope_cell), tmp_pth)
-    # Ignore any variables that are assigned as None
-    scope_dict = {s.split(': ')[0].replace("'",""): s.split(': ')[1] 
-        for s in nb2['cells'][-1]['outputs'][0]['data']['text/plain'][1:-1].split(",\n ")
-        if not s.split(': ')[1] == "None"
-    }
-    # Remove scope_cell from notebook
-    nb['cells'].pop(-1)
-    return list(scope_dict.keys())
+
     
 
-def get_scope_additions(nb: nbf.NotebookNode, chaptercells: List[dict]) -> List[str]:
-    initial_scope = get_nb_scope(nb)
-    nb = add_cells_to_notebook(nb, chaptercells)
-    final_scope = get_nb_scope(nb)
-    # remove jupyter internals
-    scopediff = set([v for v in list(set(final_scope) - set(initial_scope)) if not v.startswith('_')])
 
-    return scopediff
