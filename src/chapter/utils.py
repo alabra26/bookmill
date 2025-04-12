@@ -96,13 +96,13 @@ class NotebookGenerator():
         # TODO : make this a Cell object
         if self.kernel == "python":
             scope_cell = {
-                'cell_type': 'code',
+                'cell type': 'code',
                 'source': 'locals()',
                 'tags': ['scope', 'trim']
             }
         elif self.kernel == "R":
             scope_cell = {
-                'cell_type': 'code',
+                'cell type': 'code',
                 'source': 'ls()',
                 'tags': ['scope', 'trim']
             }
