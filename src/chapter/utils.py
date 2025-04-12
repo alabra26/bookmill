@@ -68,7 +68,7 @@ class NotebookGenerator():
 
         return scopediff
 
-    def _get_nb_scope():
+    def _get_nb_scope(self):
         # define variable scope cell
         # TODO : move this to a config file
         # TODO : make this a Cell object
@@ -79,7 +79,7 @@ class NotebookGenerator():
         }
         tmp_pth = 'tmp.ipynb'
         # TODO : add execution parameters here if they exist
-        nb2 = pm.execute_notebook(self._add_cell_to_notebook(self.nb, scope_cell), tmp_pth)
+        nb2 = pm.execute_notebook(add_cell_to_notebook(self.nb, scope_cell), tmp_pth)
         # Ignore any variables that are assigned as None
         scope_dict = {s.split(': ')[0].replace("'",""): s.split(': ')[1] 
             for s in nb2['cells'][-1]['outputs'][0]['data']['text/plain'][1:-1].split(",\n ")
