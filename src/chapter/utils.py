@@ -23,7 +23,7 @@ class NotebookGenerator():
         self.nb = nbf.v4.new_notebook()
         # add chapters
         for chapterName in self.chapters.keys():
-            self._append_chapter(chapters[chapterName])
+            self._append_chapter(self.chapters[chapterName])
             
     def write_notebook(self):
         # Check if nb exists
@@ -126,11 +126,11 @@ def build_notebook(chapters: List[dict], output_path) -> nbf.NotebookNode:
         
 def load_chapters(chapter_yaml_path: str) -> dict:
     with open(chapter_yaml_path) as stream:
-    try:
-        chapters = yaml.safe_load(stream)
-    except yaml.YAMLError as exc:
-        print("Error loading in Chapters, please check the Chapters YAML file.")
-        raise
+        try:
+            chapters = yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print("Error loading in Chapters, please check the Chapters YAML file.")
+            raise
     return chapters
     
 def get_nb_scope(nb: nbf.NotebookNode):
