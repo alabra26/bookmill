@@ -7,9 +7,11 @@ from typing import Dict, List
 # TODO : figure out how we will run papermill with parameter injection, as this is needed (even for scope checking)
 
 class NotebookGenerator():
-    def __init__(self, nb_path: str, chapters_path: str, **kwargs) -> None:
+    def __init__(self, nb_path: str, chapters_path: str, kernel: str = 'R', **kwargs) -> None:
+        # TODO : kernel should be bound to/specified by the chapter metadata
         self._params_setup(**kwargs)
         self.nb_path = nb_path
+        self.kernel = kernel
         self.chapters = load_chapters(chapters_path)
         self.current_scope = []
         
@@ -21,6 +23,26 @@ class NotebookGenerator():
     def build_notebook(self):
         # initialize empty
         self.nb = nbf.v4.new_notebook()
+        # set kernel
+        #### TODO
+        if self.kernel == 'R':
+            self.nb['metadata'] = {
+                "kernelspec": {
+                    "disply_name": "R",
+                    "language": "R",
+                    "name": "ir"
+                },
+                "language_info": {
+                    "codemirror_mode": "r",
+                    "file_extension": ".r",
+                    "mimetype": "text/x-r-source",
+                    "name": "R",
+                    "pygments_lexer": "r",
+                    "version": "4.4.2",
+                },
+            }
+        else:
+            raise NotImplementedError(f"Not compatible with passed kernel type: {self.kernel}")
         # add chapters
         for chapterName in self.chapters.keys():
             self._append_chapter(self.chapters[chapterName])
