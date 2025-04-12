@@ -112,13 +112,23 @@ class NotebookGenerator():
         # TODO : add execution parameters here if they exist
         nb2 = pm.execute_notebook(add_cell_to_notebook(self.nb, scope_cell), tmp_pth)
         # Ignore any variables that are assigned as None
-        scope_dict = {s.split(': ')[0].replace("'",""): s.split(': ')[1] 
-            for s in nb2['cells'][-1]['outputs'][0]['data']['text/plain'][1:-1].split(",\n ")
-            if not s.split(': ')[1] == "None"
-        }
+        if self.kernel == "python":
+            scope_dict = {s.split(': ')[0].replace("'",""): s.split(': ')[1] 
+                for s in nb2['cells'][-1]['outputs'][0]['data']['text/plain'][1:-1].split(",\n ")
+                if not s.split(': ')[1] == "None"
+            }
+            scope_vars = list(scope_dict.keys())
+        elif self.kernel == "R":
+            scope_vars = nb2['cells'][-1]['outputs'][0]['data']['text/plain'].replace(
+                '[1] ', ''
+                ).replace(
+                    "'",""
+                ).replace(
+                    '"',''
+                ).split(' ')
         # Remove scope_cell from notebook
         self.nb['cells'].pop(-1)
-        return list(scope_dict.keys())
+        return scope_vars
         
     
     
