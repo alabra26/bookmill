@@ -5,6 +5,7 @@ import yaml
 import re
 
 # TODO : implement cell_not_executed and confirm trimming does not modify inplace
+# TODO : specify python kernel in notebook metadata, see R_AutoNB.py line 68 for the R version as an example
 
 class NBWriter(object):
     def __init__(self, template_path: str, report_savepath: str = None):
